@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function add(){
+      tr = document.createElement("tr");
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      tbody = document.getElementById("assin").getElementsByTagName("tbody")[0];
+      tr.setAttribute("id", tbody.childElementCount+1)
+      tbody.append(tr);
+    }
+
+    function addparticipants(){
+      tr = document.createElement("tr");
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      tbody = document.getElementById("coupart").getElementsByTagName("tbody")[0];
+      tr.setAttribute("id", "c-"+(tbody.childElementCount+1))
+      tbody.append(tr);
+    }
+
+    function download(){
+      document.getElementById('showme').style.display = "block";
+      document.getElementsByClassName('blur')[0].style.filter = "blur(8px)";
+
+      filename = document.getElementById("download").getAttribute("filename");
+      if(filename=="" || filename==null){
+        alert("Please generate the file first");
+        document.getElementById('showme').style.display = "none";
+        document.getElementsByClassName('blur')[0].style.filter = "";
+        return;
+      }
+      final_json = {
+        "filename":document.getElementById("download").getAttribute("filename")
+      };
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/download");
+      xhttp.responseType = 'blob';
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.onload = function (e) {
+        var blob = e.currentTarget.response;
+        var contentDispo = e.currentTarget.getResponseHeader('Content-Disposition');
+        var fileName = contentDispo.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)[1];
+        saveBlob(blob, fileName);
+
+        document.getElementById('showme').style.display = "none";
+        document.getElementsByClassName('blur')[0].style.filter = "";
+      };
+      xhttp.send(JSON.stringify(final_json));
+    }
+
+    function saveBlob(blob, fileName) {
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName;
+    a.dispatchEvent(new MouseEvent('click'));
+}
+
+    function submit(){
+      document.getElementById('showme').style.display = "block";
+      document.getElementsByClassName('blur')[0].style.filter = "blur(8px)";
+
+      var selected_options = [];
+      div = document.getElementById("forms");
+      var inputs = div.getElementsByTagName("input");
+      for(i=0;i<inputs.length;i++){
+        if(inputs[i].checked){
+          selected_options.push(inputs[i].getAttribute("filename"));
+          console.log(selected_options);
+        }
+      }
+
+      course_info = {};
+      div = document.getElementById("course-info");
+      var checkboxes = div.getElementsByTagName("input");
+      for(i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].getAttribute('type')=="text"){
+          key = document.querySelector("label[for="+checkboxes[i].getAttribute('id')+"]").innerHTML;
+          course_info[key.substring(0,key.indexOf(':'))] = checkboxes[i].value;
+        }
+      }
+      console.log(course_info);
+
+      assisting_instructors = {};
+      tbody = document.getElementById("assin").getElementsByTagName("tbody")[0];
+      var tr_list = tbody.getElementsByTagName("tr");
+      for(i=0;i<tr_list.length;i++){
+        input_list = tr_list[i].getElementsByTagName("input");
+        assisting_instructors["assis-name-"+i] = input_list[0].value;
+        assisting_instructors["assis-card-exp-"+i] = input_list[1].value;
+      }
+      console.log(assisting_instructors);
+
+      course_participants = {};
+      div = document.getElementById("course-participants");
+      var checkboxes = div.getElementsByTagName("input");
+      var labels = div.getElementsByTagName("label");
+      for(i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].getAttribute('type')=="text"){
+          for(j=0;j<labels.length;j++){
+            if(labels[j].getAttribute("for")==checkboxes[i].getAttribute("id")){
+              key = labels[j].innerHTML;
+              break;
+            }
+          }
+          course_participants[key.substring(0,key.indexOf(':'))] = checkboxes[i].value;
+        }
+      }
+      console.log(course_participants);
+
+      course_participants1 = {};
+      students = document.getElementById("student_accordions");
+      tbody = students.getElementsByTagName("tbody");
+
+      var tr_list = [];
+      for(i=0;i<tbody.length;i++){
+        tr_list[i] = tbody[i].getElementsByTagName("tr")[0];
+      }
+      std_array = [];
+      try{
+        k=0;
+        for(i=0;i<tr_list.length;i++){
+          input_list = tr_list[i].getElementsByTagName("input");
+          if(input_list.length<2){
+            std_obj["cp-dot"] = input_list[0].value;
+            std_array.push(std_obj);
+            continue;
+          };
+          course_participants1["cp-name-"+k] = input_list[0].value;
+          course_participants1["cp-email-"+k] = input_list[1].value;
+          course_participants1["cp-mailing-"+k] = input_list[2].value;
+          course_participants1["cp-phone-"+k] = input_list[3].value;
+          course_participants1["cp-psa-"+k] = input_list[4].value;
+          course_participants1["cp-comp-imcomp-"+k] = input_list[5].value;
+          course_participants1["cp-remed-"+k] = input_list[6].value;
+          k = k+1;
+
+          console.log("hi");
+          checkbox_list = tr_list[i].parentNode.parentNode.parentNode.getElementsByTagName("input");
+          selected_checboxes = [];
+          for(j=0;j<checkbox_list.length;j++){
+            if(checkbox_list[j].getAttribute("type")=="checkbox" && checkbox_list[j].checked){
+              selected_checboxes.push(checkbox_list[j].getAttribute("filename"));
+            }
+          }
+          std_obj = {};
+          std_obj["cp-name"] = input_list[0].value;
+          std_obj["selected-checkboxes"] = selected_checboxes;
+        }
+      }catch(err){
+      console.log(err);
+      }
+      course_participants1["student-info"] = std_array;
+      console.log(course_participants1);
+
+      output_file_name = document.getElementById("outfilename").value;
+      if(output_file_name==null || output_file_name==""){
+        alert("Please provide the output file name");
+        document.getElementById('showme').style.display = "none";
+        document.getElementsByClassName('blur')[0].style.filter = "";
+        return;
+      }
+      final_json = {
+        "outputFileName": output_file_name,
+        "selectedOptions": selected_options,
+        "courseInfo": course_info,
+        "assistingInstructors": assisting_instructors,
+        "courseParticipants": course_participants,
+        "courseParticipants1": course_participants1
+      }
+      console.log(final_json);
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/submit");
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.onload = function () {
+        response = JSON.parse(this.responseText);
+        console.log(response);
+        document.getElementById("download").setAttribute("filename", response['filepath']);
+        document.getElementById('showme').style.display = "none";
+        document.getElementsByClassName('blur')[0].style.filter = "";
+      };
+      xhttp.send(JSON.stringify(final_json));
+    }
+ </script>
+  <script>
+  function accordionListener(index){
+      var acc = document.getElementsByClassName("accordion")[index];
+      var i;
+
+      acc.addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+    }
+  $(document).ready(function(){
+    accordionListener(0);
+  });
+  </script>
+  <script>
+    function addstudents(){
+      main_div = document.getElementById("student_accordions");
+      accordions = main_div.getElementsByClassName("accordion");
+      console.log(accordions);
+      student_length = accordions.length;
+      console.log(student_length);
+
+      div = document.createElement("div");
+      div.setAttribute("class","panel");
+
+      table = document.createElement("table");
+      table.setAttribute("id","coupart");
+      table.setAttribute("class","table6");
+
+      thead = document.createElement("thead");
+      tr = document.createElement("tr");
+
+      th = document.createElement("th");
+      th.innerHTML = "Name";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "Email";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "Mailing Address";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "Telephone";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "PSA";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "Complete / Incomplete";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      th = document.createElement("th");
+      th.innerHTML = "Remediation / DateCompleted";
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+      th = document.createElement("th");
+      tr.append(th);
+
+      thead.append(tr);
+      table.append(thead);
+// <! ---------------------------------------------->
+      tbody = document.createElement("tbody");
+      tr = document.createElement("tr");
+      tr.setAttribute("id", "c-1");
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      tbody.append(tr);
+      table.append(tbody);
+
+      div.append(table);
+      div.append(document.createElement("br"));
+
+      table = document.createElement("table");
+      table.setAttribute("class","table7");
+      tbody = document.createElement("tbody");
+      tr = document.createElement("tr");
+
+      td = document.createElement("td");
+      label = document.createElement("label");
+      label.setAttribute("for", "dot");
+      label.innerHTML = "Date of Test:";
+      td.append(label);
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      input.setAttribute("type", "text");
+      input.setAttribute("id", "dot");
+      input.setAttribute("name", "dot");
+      td.append(input);
+      tr.append(td);
+
+      tbody.append(tr);
+      table.append(tbody);
+      div.append(table);
+
+      button = document.createElement("button");
+      button.setAttribute("class", "accordion");
+      button.innerHTML = "Student "+ (student_length+1);
+
+      main_div.append(button);
+
+      str = '<div class="row">       <div class="column">         <h3>ACLS:</h3>         <input type="checkbox" id="mtcs138'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_138_ucm_506935_unlocked"></input>         <label for="mtcs138'+(student_length+1)+'">Megacode 1,3,8</label><br>          <input type="checkbox" id="mtcs25'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_25_ucm_506936_unlocked"></input>         <label for="mtcs25'+(student_length+1)+'">Megacode 2,5</label><br>          <input type="checkbox" id="mtcs4710'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_4710_ucm_506937_unlocked (1)"></input>         <label for="mtcs4710'+(student_length+1)+'">Megacode 4,7,10</label><br>          <input type="checkbox" id="mtcs611'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_611_ucm_506938_unlocked"></input>         <label for="mtcs611'+(student_length+1)+'">Megacode 6,11</label><br>          <input type="checkbox" id="mtcs9'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_9_ucm_506939_unlocked"></input>         <label for="mtcs9'+(student_length+1)+'">Megacode 9</label><br>          <input type="checkbox" id="mtcs12'+(student_length+1)+'" filename="ACLS_Megacode_Testing_ChecklistScenarios_12_ucm_506940_unlocked (3)"></input>         <label for="mtcs12'+(student_length+1)+'">Megacode 12</label><br>       </div>        <div class="column">         <h3>PALS:</h3>         <input type="checkbox" id="tccvfvt'+(student_length+1)+'" filename="PALS_Testing_Checklis_Cardiac_VF_Pulseless_VT_ucm_506926_unlocked"></input>         <label for="tccvfvt'+(student_length+1)+'">Cardiac - VF Pulseless VT</label><br>          <input type="checkbox" id="tccapea'+(student_length+1)+'" filename="PALS_Testing_Checklist_Cardiac_Asystole_PEA_ucm_506923_unlocked"></input>         <label for="tccapea'+(student_length+1)+'">Cardiac - Asystole PEA</label><br>          <input type="checkbox" id="tccb'+(student_length+1)+'" filename="PALS_Testing_Checklist_Cardiac_Bradycardia_ucm_506924_unlocked (1)"></input>         <label for="tccb'+(student_length+1)+'">Cardiac - Bradycardia</label><br>          <input type="checkbox" id="tccst'+(student_length+1)+'" filename="PALS_Testing_Checklist_Cardiac_Supraventricular_Tachycardia_ucm_506925_unlocked"></input>         <label for="tccst'+(student_length+1)+'">Cardiac - SVT</label><br>          <input type="checkbox" id="tccrdcb'+(student_length+1)+'" filename="PALS_Testing_Checklist_Respiratory_Disordered_Control_of_Breathing_ucm_506927_unlocked"></input>         <label for="tccrdcb'+(student_length+1)+'">Respiratory - Disordered Control of breathing</label><br>          <input type="checkbox" id="tccrlao'+(student_length+1)+'" filename="PALS_Testing_Checklist_Respiratory_Lower_Airway_Obstruction_ucm_506928_unlocked"></input>         <label for="tccrlao'+(student_length+1)+'">Respiratory - Lower Airway obstruction</label><br>          <input type="checkbox" id="tccrtd'+(student_length+1)+'" filename="PALS_Testing_Checklist_RespiratoryLung_Tissue_Disease_ucm_506929_unlocked"></input>         <label for="tccrtd'+(student_length+1)+'">Respiratory - Lung Tissue Disease</label><br>          <input type="checkbox" id="tccruao'+(student_length+1)+'" filename="PALS_Testing_Checklist_RespiratoryUpper_Airway_Obstruction_ucm_506930_unlocked"></input>         <label for="tccruao'+(student_length+1)+'">Respiratory - Upper Airway obstruction</label><br>          <input type="checkbox" id="tccscs'+(student_length+1)+'" filename="PALS_Testing_Checklist_Shock_Cardiogenic_Shock_ucm_506931_unlocked"></input>         <label for="tccscs'+(student_length+1)+'">Shock - Cardiogenic</label><br>          <input type="checkbox" id="tccsos'+(student_length+1)+'" filename="PALS_Testing_Checklist_Shock_Obstructive_Shock_ucm_506934_unlocked"></input>         <label for="tccsos'+(student_length+1)+'">Shock - Obstructive</label><br>          <input type="checkbox" id="tccsds'+(student_length+1)+'" filename="PALS_Testing_Checklist_ShockDistributive_Shock_ucm_506932_unlocked"></input>         <label for="tccsds'+(student_length+1)+'">Shock - Distributive</label><br>          <input type="checkbox" id="tccshs'+(student_length+1)+'" filename="PALS_Testing_Checklist_ShockHypovolemic_Shock_ucm_506933_unlocked"></input>         <label for="tccshs'+(student_length+1)+'">Shock - Hypovolemic</label><br>       </div>     </div>';
+      div.insertAdjacentHTML("beforeend", str);
+
+      main_div.append(div);
+      accordionListener(student_length);
+
+    }
+    function showDiv() {
+      document.getElementById('showme').style.display = "block";
+      document.getElementsByClassName('blur')[0].style.filter = "blur(8px)";
+    }
+  </script>
+  <script>
+    function openSlideMenu() {
+      document.getElementById('side-menu').style.width = '250px';
+      document.getElementById('main').style.marginLeft = '250px';
+    }
+
+    function closeSlideMenu() {
+      document.getElementById('side-menu').style.width = '0';
+      document.getElementById('main').style.marginLeft = '0';
+    }
+  </script>
+  <!-- added line to fix mobile responsive issue -->
+  <meta content="True" name="HandheldFriendly">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="viewport" content="width=device-width">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/styles.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"></head>
+<body>
+
+  <div id="showme" style="display:none;position:fixed;left:40%;top:35%;z-index:1000;height:31px;width:31px;">
+      <img src="{{ url_for('static',filename='images/loading.gif') }}">
+  </div>
+
+  <div class="logo">
+    <img src="{{ url_for('static',filename='images/logo.png') }}" alt="logo">
+  </div>
+
+  <!-- added sidebar html 👇👇 -->
+
+  <nav class="navbar">
+    <span class="open-slide">
+      <a href="#" onclick="openSlideMenu()">
+        <svg width="30" height="30">
+          <path d="M0,5 30,5" stroke="#636769"
+          stroke-width="5"/>
+          <path d="M0,14 30,14" stroke="#636769"
+          stroke-width="5"/>
+          <path d="M0,23 30,23" stroke="#636769"
+          stroke-width="5"/>
+        </svg>
+      </a>
+    </span>
+  </nav>
+
+  <!-- <div class="navbar-nav"> -->
+    <h2 class="header">Basic Life Support Course Roster</h2> <!-- bring this heading outside of div below -->
+  <!-- </div> -->
+
+  <div id="side-menu" class="side-nav">
+    <a href="#" class="btn-close" onclick="closeSlideMenu()">&times;</a>
+    <a href="#" class="sidebar-option">Home</a>
+    <a href="#" class="sidebar-option">About</a>
+    <a href="#" class="sidebar-option">Services</a>
+    <a href="#" class="sidebar-option">Contact</a>
+  </div>
+
+
+  <div class="form-group alignright blur width">
+    
+    <h3 class="forms-header"><u>Course Information</u></h3>
+    <div id="forms">
+      <input type="checkbox" id="blsc" filename="2020 Guidelines BLS Course Roster_ucm_506772_unlocked (1)"></input>
+      <label for="blsc">BLS Course Roster</label><br>
+
+      <input type="checkbox" id="blsrc" filename="Adult CPR and AED Skills Testing Checklist_ucm_506673_unlocked"></input>
+      <label for="blsrc">BLS Adult CPR and AED Skills Testing Checklist</label><br>
+
+      <input type="checkbox" id="hcbls" filename="Adult HighQuality BLS Skills Testing Checklist_ucm_506696_unlocked"></input>
+      <label for="hcbls">ACLS Adult High-Quality BLS Skills Testing Checklist</label><br>
+
+      <input type="checkbox" id="blsic" filename="Airway Management Skills Testing Checklist_ucm_506697_unlocked"></input>
+      <label for="blsic">Airway Management Skills Testing Checklist</label><br>
+
+      <input type="checkbox" id="aclsc" filename="PALS Infant CPR Skills Testing Checklist_ucm_506712_unlocked"></input>
+      <label for="aclsc">PALS Pediatric Advanced Life Support Infant CPR Skills Testing Checklist</label><br>
+
+      <input type="checkbox" id="aclsuc" filename="Airway Management Skills Station Competency Checklist_ucm_506713_unlocked"></input>
+      <label for="aclsuc">Airway Management Skills Station Competency Checklist</label><br>
+
+      <input type="checkbox" id="aclstc" filename="Child CPR and AED Skills Testing Checklist_ucm_506711_unlocked"></input>
+      <label for="aclstc">PALS Child CPR and AED Skills Testing Checklist</label><br>
+
+      <input type="checkbox" id="aclstuc" filename="Rhythm Disturbances Electrical Therapy Skills Station Competency Checklist_ucm_506714_unlocked"></input>
+      <label for="aclstuc">Rhythm Disturbances/Electrical Therapy Skills Station Competency Checklist</label><br>
+
+      <input type="checkbox" id="hacls" filename="Vascular Access Skills Station Competency Checklist_ucm_506715_unlocked"></input>
+      <label for="hacls">Vascular Access Skills Station Competency Checklist</label><br>
+    </div>
+
+    <br><br>
+
+    <div id="course-info">
+      <table class="table1">
+        <tr>
+          <td><label for="lins">Lead Instructor:</label></td>
+          <td><input type="text" id="lins" name="lins"></td>
+        </tr>
+
+        <tr>
+          <td><label for="lii">Lead Instructor ID#:</label></td>
+          <td><input type="text" id="lii" name="lii"></td>
+        </tr>
+
+        <tr>
+          <td><label for="ced">Card Expiration Date:</label></td>
+          <td><input type="text" id="ced" name="ced"></td>
+        </tr>
+
+        <tr>
+          <td><label for="tc">Training Center:</label></td>
+          <td><input type="text" id="tc" name="tc"></td>
+        </tr>
+
+        <tr>
+          <td><label for="tci">Training Center ID#:</label></td>
+          <td><input type="text" id="tci" name="tci"></td>
+        </tr>
+
+        <tr>
+          <td><label for="tsn">Training Site Name:</label></td>
+          <td><input type="text" id="tsn" name="tsn"></td>
+        </tr>
+
+        <tr>
+          <td><label for="addr">Address:</label></td>
+          <td><input type="text" id="addr" name="addr"></td>
+        </tr>
+
+        <tr>
+          <td><label for="csz">City, State ZIP:</label></td>
+          <td><input type="text" id="csz" name="csz"></td>
+        </tr>
+
+        <tr>
+          <td><label for="cl">Course Location:</label></td>
+          <td><input type="text" id="cl" name="cl"></td>
+        </tr>
+
+      </table>
+
+      <br>
+      <table class="table2">
+        <tr>
+          <td><label for="csdt">Course Start:</label></td>
+          <td data-label="Course Start:"><input  type="text" id="csdt" name="csdt"></td>
+          <td></td><td></td>
+          <td class="center"><label for="cedt">Course End:</label></td>
+          <td data-label="Course End:"><input type="text" id="cedt" name="cedt"></td>
+          <td></td><td></td>
+          <td><label for="thoi">Total Hours:</label></td>
+          <td data-label="Total Hours:"><input type="text" id="thoi" name="thoi"></td>
+        </tr>
+        <tr>
+          <td><label for="nci">No of Cards:</label></td>
+          <td data-label="No of Cards:"><input type="text" id="nci" name="nci"></td>
+          <td></td><td></td>
+          <td><label for="smr">Student-Manikin Ratio:</label></td>
+          <td data-label="Student-Manikin Ration:"><input type="text" id="smr" name="smr"></td>
+          <td></td><td></td>
+          <td><label for="idc">Issue Date:</label></td>
+          <td data-label="Issue Date:"><input type="text" id="idc" name="idc"></td>
+        </tr>
+      </table>
+
+      <br>
+      <table class="table3">
+        <tr>
+          <td><label for="ii">Instructor Initials:</label></td>
+          <td data-label="Instructor Initials:"><input type="text" id="ii" name="ii"></td>
+          <td></td><td></td>
+          <td><label for="in">Instructor Number:</label></td>
+          <td data-label="Instructor Number:"><input type="text" id="in" name="in"></td>
+        </tr>
+      </table>
+    </div>
+
+    <h3 class="instructors-header"><u>Assisting Instructors</u></h3>
+    <table id="assin" class="table4">
+      <thead>
+        <th>Name and Instructor ID#</th>
+        <th></th>
+        <th>Card Exp. Date</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr id="1">
+          <td class="center"><input></input></td>
+          <td></td>
+          <td class="center"><input></input></td>
+          <td class="add" onclick="add()"><a><u>+</u></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br><br>
+    <div id="course-participants">
+      <table class="table5"> <!-- may be id or something deleted -->
+        <tr>
+          <td><label for="course">Course:</label></td>
+          <td data-label="Course:"><input type="text" id="course" name="course"></td>
+          <td class="padding-left"><label for="sli">Lead Instructor Signature:</label></td>
+          <td data-label="Lead Instructor Signature:"><input type="text" id="sli" name="sli"></td>
+          <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+          <td><label for="date">Date:</label></td>
+          <td data-label="Date:"><input type="text" id="date" name="date"></td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <div id="student_accordions">
+      <button class="accordion">Student 1</button>
+      <div class="panel">
+        <table id="coupart" class="table6">
+          <thead>
+            <th>Name</th>
+            <th></th>
+            <th>Email</th>
+            <th></th>
+            <th>Mailing Address</th>
+            <th></th>
+            <th>Telephone</th>
+             <th></th>
+            <th>PSA</th>
+            <th></th>
+            <th>Complete / Incomplete</th>
+            <th></th>
+            <th>Remediation / Date Completed</th>
+            <th></th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr id="c-1">
+              <td data-label="Name"><input></input></td>
+              <td></td>
+              <td data-label="Email"><input></input></td>
+              <td></td>
+              <td data-label="Mailing Address"><input></input></td>
+              <td></td>
+              <td data-label="Telephone"><input></input></td>
+               <td></td>
+              <td data-label="PSA"><input></input></td>
+              <td></td>
+              <td data-label="Complete/Incomplete"><input></input></td>
+              <td></td>
+              <td data-label="Remediation/DateCompleted"><input></input></td>
+            </tr>
+          </tbody>
+        </table>
+          <!--&lt;!&ndash; copied above th & td&ndash;&gt;
+          <thead>
+            &lt;!&ndash; <th>Name</th>
+            <th></th>
+            <th>Email</th>
+            <th></th>
+            <th>Mailing Address</th>
+            <th></th>
+            <th>Telephone</th>
+            <th></th> &ndash;&gt;
+            <th>PSA</th>
+            <th></th>
+            <th>Complete/Incomplete</th>
+            <th></th>
+            <th>Remediation/DateCompleted</th>
+            <th></th>
+            <th></th>
+          </thead>
+          <tbody>
+            <tr id="c-1">
+              &lt;!&ndash; <td><input></input></td>
+              <td></td>
+              <td><input></input></td>
+              <td></td>
+              <td><input></input></td>
+              <td></td>
+              <td><input></input></td>
+              <td></td> &ndash;&gt;
+              <td data-label="PSA"><input></input></td>
+              <td></td>
+              <td data-label="Complete/Incomplete"><input></input></td>
+              <td></td>
+              <td data-label="Remediation/DateCompleted"><input></input></td>
+            </tr>
+          </tbody>
+        </table>-->
+        <br>
+        <table class="table7">
+          <tr>
+            <td><label for="dot">Date of Test:</label></td>
+            <td><input type="text" id="dot" name="dot"></td>
+          </tr>
+        </table>
+        <div class="row">
+          <div class="column">
+            <h3>ACLS:</h3>
+            <input type="checkbox" id="mtcs138" filename="ACLS_Megacode_Testing_ChecklistScenarios_138_ucm_506935_unlocked"></input>
+            <label for="mtcs138">Megacode 1,3,8</label><br>
+
+            <input type="checkbox" id="mtcs25" filename="ACLS_Megacode_Testing_ChecklistScenarios_25_ucm_506936_unlocked"></input>
+            <label for="mtcs25">Megacode 2,5</label><br>
+
+            <input type="checkbox" id="mtcs4710" filename="ACLS_Megacode_Testing_ChecklistScenarios_4710_ucm_506937_unlocked (1)"></input>
+            <label for="mtcs4710">Megacode 4,7,10</label><br>
+
+            <input type="checkbox" id="mtcs611" filename="ACLS_Megacode_Testing_ChecklistScenarios_611_ucm_506938_unlocked"></input>
+            <label for="mtcs611">Megacode 6,11</label><br>
+
+            <input type="checkbox" id="mtcs9" filename="ACLS_Megacode_Testing_ChecklistScenarios_9_ucm_506939_unlocked"></input>
+            <label for="mtcs9">Megacode 9</label><br>
+
+            <input type="checkbox" id="mtcs12" filename="ACLS_Megacode_Testing_ChecklistScenarios_12_ucm_506940_unlocked (3)"></input>
+            <label for="mtcs12">Megacode 12</label><br>
+          </div>
+
+          <div class="column">
+            <h3>PALS:</h3>
+            <input type="checkbox" id="tccvfvt" filename="PALS_Testing_Checklis_Cardiac_VF_Pulseless_VT_ucm_506926_unlocked"></input>
+            <label for="tccvfvt">Cardiac - VF Pulseless VT</label><br>
+
+            <input type="checkbox" id="tccapea" filename="PALS_Testing_Checklist_Cardiac_Asystole_PEA_ucm_506923_unlocked"></input>
+            <label for="tccapea">Cardiac - Asystole PEA</label><br>
+
+            <input type="checkbox" id="tccb" filename="PALS_Testing_Checklist_Cardiac_Bradycardia_ucm_506924_unlocked (1)"></input>
+            <label for="tccb">Cardiac - Bradycardia</label><br>
+
+            <input type="checkbox" id="tccst" filename="PALS_Testing_Checklist_Cardiac_Supraventricular_Tachycardia_ucm_506925_unlocked"></input>
+            <label for="tccst">Cardiac - SVT</label><br>
+
+            <input type="checkbox" id="tccrdcb" filename="PALS_Testing_Checklist_Respiratory_Disordered_Control_of_Breathing_ucm_506927_unlocked"></input>
+            <label for="tccrdcb">Respiratory - Disordered Control of breathing</label><br>
+
+            <input type="checkbox" id="tccrlao" filename="PALS_Testing_Checklist_Respiratory_Lower_Airway_Obstruction_ucm_506928_unlocked"></input>
+            <label for="tccrlao">Respiratory - Lower Airway obstruction</label><br>
+
+            <input type="checkbox" id="tccrtd" filename="PALS_Testing_Checklist_RespiratoryLung_Tissue_Disease_ucm_506929_unlocked"></input>
+            <label for="tccrtd">Respiratory - Lung Tissue Disease</label><br>
+
+            <input type="checkbox" id="tccruao" filename="PALS_Testing_Checklist_RespiratoryUpper_Airway_Obstruction_ucm_506930_unlocked"></input>
+            <label for="tccruao">Respiratory - Upper Airway obstruction</label><br>
+
+            <input type="checkbox" id="tccscs" filename="PALS_Testing_Checklist_Shock_Cardiogenic_Shock_ucm_506931_unlocked"></input>
+            <label for="tccscs">Shock - Cardiogenic</label><br>
+
+            <input type="checkbox" id="tccsos" filename="PALS_Testing_Checklist_Shock_Obstructive_Shock_ucm_506934_unlocked"></input>
+            <label for="tccsos">Shock - Obstructive</label><br>
+
+            <input type="checkbox" id="tccsds" filename="PALS_Testing_Checklist_ShockDistributive_Shock_ucm_506932_unlocked"></input>
+            <label for="tccsds">Shock - Distributive</label><br>
+
+            <input type="checkbox" id="tccshs" filename="PALS_Testing_Checklist_ShockHypovolemic_Shock_ucm_506933_unlocked"></input>
+            <label for="tccshs">Shock - Hypovolemic</label><br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="add-student" onclick="addstudents()"><center><h2 class="button-30"><u>Add Student +</u></h2></center></div>
+
+    <br><br>
+    <div class="outfilename-div">
+      <center><input id="outfilename" class="outfilename" type="text" placeholder="Output File Name" required="required"></input>.pdf</center>
+    </div>
+
+    <br>
+    <br>
+    <center><input class="btn btn-submit" id="submit" type="button" value="Submit" onclick="submit()">
+    <input class="btn btn-download" id="download" type="button" value="Download" onclick="download()">
+    </center>
+
+    <br>
+    <br>
+  </div>
+  <!-- script for sidebar menu -->
+  <!-- <script>
+    function openSlideMenu() {
+      document.getElementById('side-menu').style.width = '250px';
+      document.getElementById('main').style.marginLeft = '250px';
+    }
+
+    function closeSlideMenu() {
+      document.getElementById('side-menu').style.width = '0';
+      document.getElementById('main').style.marginLeft = '0';
+    }
+  </script> -->
+</body>
+</html>
+

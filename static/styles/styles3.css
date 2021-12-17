@@ -1,0 +1,622 @@
+* {
+  box-sizing: border-box;
+  color: #636769;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: #f5f5f5;
+}
+
+.width {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.svgc{
+}
+.header {
+  text-align: center;
+  background-color: #174063;
+  font-size: 3rem;
+  padding: 1.3rem;
+  color: whitesmoke;
+}
+
+.forms-header,
+.instructors-header {
+  padding: 2rem;
+  padding-bottom: 1rem;
+}
+
+.forms-header u,
+.instructors-header u {
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.instructors-header {
+  margin-top: 2rem;
+}
+
+.add {
+  vertical-align: top;
+}
+
+.add a u {
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 2rem;
+  text-align: center;
+}
+
+#forms {
+  padding: 2rem;
+  padding-top: 0;
+  line-height: 1;
+}
+
+#forms input[type="checkbox"],
+.row input[type="checkbox"] {
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+#forms label::before,
+.row label::before {
+  content: "";
+  min-width: 1em;
+  height: 1em;
+  border-radius: 0.15em;
+  margin-right: 0.5em;
+  border: 0.15em solid #636769;
+  position: relative;
+  bottom: 3px;
+}
+
+.row label::before {
+  min-width: 0.7em;
+  height: 0.7em;
+}
+
+#forms label,
+.row label {
+  padding-left: 0.5rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  padding-top: 8px;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+}
+
+#forms label:hover::before,
+#forms input[type="checkbox"]:hover + label::before,
+.row label:hover::before,
+.row input[type="checkbox"]:hover + label::before {
+  background-color: #c6cdd3;
+}
+
+#forms input[type="checkbox"]:disabled + label,
+#forms input[type="checkbox"]:disabled,
+.row input[type="checkbox"]:disabled + label,
+.row input[type="checkbox"]:disabled {
+  color: #aaa;
+  cursor: default;
+}
+
+#forms input[type="checkbox"]:checked + label::before,
+.row input[type="checkbox"]:checked + label::before {
+  content: "\002714";
+  background-color: #174063;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: 0.15em solid #636769;
+}
+
+#forms input[type="checkbox"]:disabled + label::before,
+.row input[type="checkbox"]:disabled + label::before {
+  background-color: #ccc;
+  border-color: #999;
+}
+
+#forms input[type="checkbox"]:hover,
+#forms label:hover {
+  color: #3b3a3a;
+}
+
+#course-info,
+.table4,
+.table5 {
+  padding: 2rem;
+  padding-top: 0;
+  font-size: 1.2rem; /* delete it later */
+}
+
+#course-info table,
+.table4 {
+  width: 100%;
+}
+
+.table1 td:first-child {
+  width: 30%;
+}
+
+.table1 td:second-child {
+  width: 70%;
+}
+
+.table2 td:nth-child(odd),
+.table3 td:nth-child(odd) {
+  width: 1%;
+}
+
+/* .table2 td:nth-child(even) {
+} */
+
+.tabe1 tr td label,
+.table2 tr td label,
+.table3 tr td label {
+  white-space: nowrap;
+  text-align: center;
+}
+
+#course-info input,
+.table4 input,
+.table5 input,
+.table6 input,
+.table7 input,
+.outfilename {
+  width: 100%;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  outline: none;
+  border: 2px solid #174063;
+  border-radius: 0.3em;
+  padding: 0.6em;
+  color: inherit;
+  font-family: inherit;
+  background: none;
+  font-size: 14px;
+}
+
+#course-info input:focus,
+.table4 input:focus,
+.table5 input:focus,
+.table6 input:focus,
+.table7 input:focus,
+.outfilename:focus {
+  border: 2px solid #d62121;
+}
+
+.table4 input {
+  width: 90%;
+  align-items: center;
+}
+
+.table4 {
+  margin-top: 1.5rem;
+}
+
+.table5 {
+  width: 100%;
+}
+
+.padding-left {
+  padding-left: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+.accordion {
+  background-color: #174063;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+}
+
+.active,
+.accordion:hover {
+  background-color: #174063;
+}
+
+.panel {
+  padding: 20px 18px;
+  display: none;
+  overflow: hidden;
+}
+
+.table6 {
+  /* table-layout: fixed; */
+  width: 100%;
+}
+
+.table7 {
+  font-weight: bold;
+}
+
+/* Clear floats after the columns */
+
+.row {
+  margin-top: 2rem;
+}
+
+.row h3 {
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding: 2rem;
+  list-style: 1.9;
+  line-height: 0.6;
+  /* height: 350px; Should be removed. Only for demonstration */
+}
+
+/* add student button */
+.button-30 {
+  align-items: center;
+  appearance: none;
+  background-color: #fcfcfd;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #21793a 0 -3px 0 inset;
+  /* box-sizing: border-box; */
+  /* color: #36395a; */
+  background-color: #2ea44f;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono", monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 30px;
+  padding-right: 30px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow 0.15s, transform 0.15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow, transform;
+  font-size: 18px;
+}
+
+.button-30:focus {
+  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #21793a 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #21793a 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #d6d6e7 0 3px 7px inset;
+  transform: translateY(2px);
+}
+
+.add-student {
+  padding: 20px;
+}
+
+.add-student h2 u {
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+
+.outfilename-div {
+  font-weight: bold;
+}
+
+.outfilename-div input {
+  width: 35%;
+}
+
+.btndw {
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+  background-color: #3c5fa1;
+  border: 1px solid #5c6370;
+  border-radius: 6px;
+  color: #fff;
+  padding: 0.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn {
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+  background-color: #8c5084;
+  border: 1px solid #5c6370;
+  border-radius: 6px;
+  color: #fff;
+  padding: 0.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #484d57;
+  border-color: #484d57;
+}
+
+.btndw:hover,
+.btndw:active {
+  background-color: #484d57;
+  border-color: #484d57;
+}
+
+.logo img {
+  position: absolute;
+  height: 5rem;
+  top: 0.3rem;
+  left: 1rem;
+}
+
+/* sidebar styling */
+
+.navbar {
+  /* background-color: #3b5998; */
+  overflow: hidden;
+  height: 63px;
+  position: absolute;
+  padding: 0.6rem;
+  right: 0;
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* .navbar-nav {
+  padding: 8px 0 0;
+} */
+
+.navbar a:hover {
+  background-color: #b4bcc4;
+  color: #000;
+}
+
+.side-nav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #a7acb1;
+  opacity: 0.9;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.7s;
+}
+
+.side-nav a {
+  padding: 10px 10px 10px 30px;
+  text-decoration: none;
+  font-size: 22px;
+  color: #454849;
+  display: block;
+  transition: 0.3s;
+}
+
+.side-nav a:hover {
+  color: #1b1b1b;
+}
+
+.side-nav .btn-close {
+  position: absolute;
+  top: 0;
+  right: 190px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.side-nav .sidebar-option {
+  text-align: right;
+  padding-right: 20px;
+}
+
+@media (max-width: 857px) and (min-width: 514px) {
+  .navbar-nav {
+    display: none;
+  }
+  .open-slide {
+    display: none;
+  }
+}
+
+@media (min-width: 568px) {
+  /* .open-slide {
+    display: none;
+  } */
+}
+
+@media (max-width: 843px) {
+  .table2 tr td label {
+    display: none;
+  }
+
+  .table2 {
+    margin-top: 20px;
+  }
+
+  .table2 tr td {
+    display: block;
+    width: 100%;
+
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .table2 tr td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+
+  .row {
+    width: 100%;
+  }
+
+  .column {
+    display: block;
+    width: 100%;
+    line-height: 0.9;
+  }
+
+  .column h3 {
+    padding-left: 2px;
+  }
+
+  .table7 {
+    font-weight: normal;
+  }
+}
+
+@media (max-width: 610px) {
+  .table3 tr td label,
+  .table5 tr td label,
+  .table6 thead th {
+    display: none;
+  }
+
+  .table3,
+  .table5 {
+    margin-top: 20px;
+  }
+
+  .table3 tr td,
+  .table5 tr td,
+  .table6 tbody tr td {
+    display: block;
+    width: 100%;
+
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .table3 tr td:before,
+  .table5 tr td:before,
+  .table6 tbody tr td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 10px;
+  }
+
+  .table6 {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 514px) {
+  .header {
+    padding: 1rem;
+    font-size: 2rem;
+  }
+
+  .navbar a:hover {
+    background-color: transparent;
+  }
+
+  /* #forms {
+    padding: 1rem;
+  } */
+
+  #forms,
+  .forms-header,
+  .instructors-header {
+    padding: 1rem;
+  }
+
+  #course-info,
+  .table4,
+  .table5 {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .table1 tr td {
+    display: block;
+    width: 100%;
+  }
+
+  .table2 tr td,
+  .table3 tr td,
+  .table5 tr td,
+  .table6 tbody tr td {
+    padding-top: 8px;
+    text-align: left;
+    padding-left: 0;
+    position: relative;
+  }
+
+  .table6 tbody tr td {
+    line-height: 2;
+  }
+
+  .table2 tr td:before,
+  .table3 tr td:before,
+  .table5 tr td:before,
+  .table6 tbody tr td:before {
+    top: -15px;
+  }
+
+  .table1 tr td label {
+    white-space: nowrap;
+  }
+
+  .logo {
+    display: none;
+  }
+
+  .header {
+    padding-right: 5rem;
+  }
+}

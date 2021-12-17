@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    function add(){
+      tr = document.createElement("tr");
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      tbody = document.getElementById("assin").getElementsByTagName("tbody")[0];
+      tr.setAttribute("id", tbody.childElementCount+1)
+      tbody.append(tr);
+    }
+
+    function addparticipants(){
+      tr = document.createElement("tr");
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      td = document.createElement("td");
+      tr.append(td);
+
+      td = document.createElement("td");
+      input = document.createElement("input");
+      td.append(input);
+      tr.append(td);
+
+      tbody = document.getElementById("coupart").getElementsByTagName("tbody")[0];
+      tr.setAttribute("id", "c-"+(tbody.childElementCount+1))
+      tbody.append(tr);
+    }
+
+    function submit(){
+
+      var selected_options = [];
+      div = document.getElementById("forms");
+      var select = div.getElementsByTagName("select")[0];
+      selected_options.push(select.selectedOptions[0].innerText)
+      console.log(selected_options);
+
+
+      course_info = {};
+      div = document.getElementById("course-info");
+      var checkboxes = div.getElementsByTagName("input");
+      for(i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].getAttribute('type')=="text"){
+          key = document.querySelector("label[for="+checkboxes[i].getAttribute('id')+"]").innerHTML;
+          course_info[key.substring(0,key.indexOf(':'))] = checkboxes[i].value;
+        }
+      }
+      console.log(course_info);
+
+      assisting_instructors = {};
+      tbody = document.getElementById("assin").getElementsByTagName("tbody")[0];
+      var tr_list = tbody.getElementsByTagName("tr");
+      for(i=0;i<tr_list.length;i++){
+        input_list = tr_list[i].getElementsByTagName("input");
+        assisting_instructors["assis-name-"+i] = input_list[0].value;
+        assisting_instructors["assis-card-exp-"+i] = input_list[1].value;
+      }
+      console.log(assisting_instructors);
+
+      course_participants = {};
+      div = document.getElementById("course-participants");
+      var checkboxes = div.getElementsByTagName("input");
+      var labels = div.getElementsByTagName("label");
+      for(i=0;i<checkboxes.length;i++){
+        if(checkboxes[i].getAttribute('type')=="text"){
+          for(j=0;j<labels.length;j++){
+            if(labels[j].getAttribute("for")==checkboxes[i].getAttribute("id")){
+              key = labels[j].innerHTML;
+              break;
+            }
+          }
+          course_participants[key.substring(0,key.indexOf(':'))] = checkboxes[i].value;
+        }
+      }
+      console.log(course_participants);
+
+      course_participants1 = {};
+      tbody = document.getElementById("coupart").getElementsByTagName("tbody")[0];
+      var tr_list = tbody.getElementsByTagName("tr");
+      for(i=0;i<tr_list.length;i++){
+        input_list = tr_list[i].getElementsByTagName("input");
+        course_participants1["cp-name-"+i] = input_list[0].value;
+        course_participants1["cp-email-"+i] = input_list[1].value;
+        course_participants1["cp-mailing-"+i] = input_list[2].value;
+        course_participants1["cp-phone-"+i] = input_list[3].value;
+        course_participants1["cp-psa-"+i] = input_list[4].value;
+        course_participants1["cp-comp-imcomp-"+i] = input_list[5].value;
+        course_participants1["cp-remed-"+i] = input_list[6].value;
+      }
+      console.log(course_participants1);
+
+      final_json = {
+        "selectedOptions": selected_options,
+        "courseInfo": course_info,
+        "assistingInstructors": assisting_instructors,
+        "courseParticipants": course_participants,
+        "courseParticipants1": course_participants1
+      }
+      console.log(final_json);
+
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "/submit");
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(JSON.stringify(final_json));
+    }
+
+  </script>
+</head>
+<body>
+
+<h2>Basic Life Support Course Roster</h2> 
+<!-- Roster -->
+
+<h3><u>Course Information</u></h3>
+<!--<form>-->
+<div id="forms">
+  <select>
+    {% for item in data %}
+    <option>{{item}}</option>
+    {% endfor %}
+  </select>
+  <!--<input type="checkbox" id="blsc"></input>
+  <label for="blsc">BLS Course</label><br>
+
+  <input type="checkbox" id="blsrc"></input>
+  <label for="blsrc">BLS Renewal Course</label><br>
+
+  <input type="checkbox" id="hcbls"></input>
+  <label for="hcbls">HeartCode® BLS</label><br>
+
+  <input type="checkbox" id="blsic"></input>
+  <label for="blsic">BLS Instructor Course</label><br>
+
+  <input type="checkbox" id="aclsc"></input>
+  <label for="aclsc">ACLS Course</label><br>
+
+  <input type="checkbox" id="aclsuc"></input>
+  <label for="aclsuc">ACLS Update Course</label><br>
+
+  <input type="checkbox" id="aclstc"></input>
+  <label for="aclstc">ACLS Traditional Course</label><br>
+
+  <input type="checkbox" id="aclstuc"></input>
+  <label for="aclstuc">ACLS Traditional Update Course</label><br>
+
+  <input type="checkbox" id="hacls"></input>
+  <label for="hacls">HeartCode® ACLS</label><br>
+
+  <input type="checkbox" id="aclsepc"></input>
+  <label for="aclsepc">ACLS EP Course</label><br>
+
+  <input type="checkbox" id="aclsic"></input>
+  <label for="aclsic">ACLS Instructor Course</label><br>
+
+  <input type="checkbox" id="aclsepic"></input>
+  <label for="aclsepic">ACLS EP Instructor Course</label><br>
+
+  <input type="checkbox" id="palsc"></input>
+  <label for="palsc">PALS Course</label><br>
+
+  <input type="checkbox" id="palsuc"></input>
+  <label for="palsuc">PALS Update Course</label><br>
+
+  <input type="checkbox" id="palstc"></input>
+  <label for="palstc">PALS Traditional Course</label><br>
+
+  <input type="checkbox" id="hpals"></input>
+  <label for="hpals">HeartCode® PALS</label><br>
+
+  <input type="checkbox" id="palsic"></input>
+  <label for="palsic">PALS Instructor Course</label><br>-->
+</div>
+  <br><br>
+
+<div id="course-info">
+  <table>
+    <tr>
+      <td><label for="lins">Lead Instructor:</label></td>
+      <td><input type="text" id="lins" name="lins"></td>
+    </tr>
+
+    <tr>
+      <td><label for="lii">Lead Instructor ID#:</label></td>
+      <td><input type="text" id="lii" name="lii"></td>
+    </tr>
+
+    <tr>
+      <td><label for="ced">Card Expriation Date:</label></td>
+      <td><input type="text" id="ced" name="ced"></td>
+    </tr>
+
+    <tr>
+      <td><label for="tc">Training Center:</label></td>
+      <td><input type="text" id="tc" name="tc"></td>
+    </tr>
+
+    <tr>
+      <td><label for="tci">Training Center ID#:</label></td>
+      <td><input type="text" id="tci" name="tci"></td>
+    </tr>
+
+    <tr>
+      <td><label for="tsn">Training Site Name:</label></td>
+      <td><input type="text" id="tsn" name="tsn"></td>
+    </tr>
+
+    <tr>
+      <td><label for="addr">Address:</label></td>
+      <td><input type="text" id="addr" name="addr"></td>
+    </tr>
+
+    <tr>
+      <td><label for="csz">City, State ZIP:</label></td>
+      <td><input type="text" id="csz" name="csz"></td>
+    </tr>
+
+    <tr>
+      <td><label for="cl">Course Location:</label></td>
+      <td><input type="text" id="cl" name="cl"></td>
+    </tr>
+
+  </table>
+
+  <br>
+  <table>
+    <tr>
+      <td><label for="csdt">Course Start:</label></td>
+      <td><input type="text" id="csdt" name="csdt"></td>
+      <td></td><td></td>
+      <td><label for="cedt">Course End:</label></td>
+      <td><input type="text" id="cedt" name="cedt"></td>
+      <td></td><td></td>
+      <td><label for="thoi">Total Hours:</label></td>
+      <td><input type="text" id="thoi" name="thoi"></td>
+    </tr>
+    <tr>
+      <td><label for="nci">No of Cards:</label></td>
+      <td><input type="text" id="nci" name="nci"></td>
+      <td></td><td></td>
+      <td><label for="smr">Student-Manikin Ratio:</label></td>
+      <td><input type="text" id="smr" name="smr"></td>
+      <td></td><td></td>
+      <td><label for="idc">Issue Date:</label></td>
+      <td><input type="text" id="idc" name="idc"></td>
+    </tr>
+  </table>
+
+  <br>
+  <table>
+    <tr>
+      <td><label for="stdname">Student Name:</label></td>
+      <td><input type="text" id="stdname" name="stdname"></td>
+      <td></td><td></td>
+      <td><label for="dot">Date of Test:</label></td>
+      <td><input type="text" id="dot" name="dot"></td>
+    </tr>
+    <tr>
+      <td><label for="ii">Instructor Initials:</label></td>
+      <td><input type="text" id="ii" name="ii"></td>
+      <td></td><td></td>
+      <td><label for="in">Instructor Number:</label></td>
+      <td><input type="text" id="in" name="in"></td>
+    </tr>
+  </table>
+</div>
+
+<h3><u>Assisting Instructors</u></h3>
+  <table id="assin">
+    <thead>
+      <th>Name and Instructor ID#</th>
+      <th></th>
+      <th>Card Exp. Date</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr id="1">
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td onclick="add()"><a><u>+</u></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br><br>
+<div id="course-participants">
+  <table>
+    <tr>
+      <td><label for="course">Course:</label></td>
+      <td><input type="text" id="course" name="course"></td>
+      <td><label for="sli">Lead Instructor Signature:</label></td>
+      <td><input type="text" id="sli" name="sli"></td>
+      <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+      <td><label for="date">Date:</label></td>
+      <td><input type="text" id="date" name="date"></td>
+    </tr>
+  </table>
+</div>
+
+  <br>
+<h3><u>Course Participants</u></h3>
+  <table id="coupart">
+    <thead>
+      <th>Name</th>
+      <th></th>
+      <th>Email</th>
+      <th></th>
+      <th>Mailing Address</th>
+      <th></th>
+      <th>Telephone</th>
+      <th></th>
+      <th>PSA</th>
+      <th></th>
+      <th>Complete/Incomplete</th>
+      <th></th>
+      <th>Remediation/DateCompleted</th>
+      <th></th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr id="c-1">
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td></td>
+        <td><input></input></td>
+        <td onclick="addparticipants()"><a><u>+</u></a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <br>
+  <br>
+  <center><input id="submit" type="button" value="Submit" onclick="submit()"></center>
+  <br>
+  <br>
+<!--</form>-->
+
+</body>
+</html>
+
